@@ -3,26 +3,31 @@ var container = $('.container');
 $('#currentDay').text("Today is " + moment().format("dddd, MMMM do YYYY"))
 var currentHour = moment().format("H")
 
-var timeInputs = [
-    { miltime: 9, time: "9am", input: ""},
-    { miltime: 10, time: "10am", input: ""},
-    { miltime: 11, time: "11am", input: ""},
-    { miltime: 12, time: "12pm", input: ""},
-    { miltime: 13, time: "1pm", input: ""},
-    { miltime: 14, time: "2pm", input: ""},
-    { miltime: 15, time: "3pm", input: ""},
-    { miltime: 16, time: "4pm", input: ""},
-    { miltime: 17, time: "5pm", input: ""},
-]
+
+var timeInputs = JSON.parse(localStorage.getItem('input')) || {
+    "9": "",
+    "10": "",
+    "11": "",
+    "12": "",
+    "13": "",
+    "14": "",
+    "15": "",
+    "16": "",
+    "17": "",
+};
+
+
 
 function renderList() {
-    for (var i = 0; i < timeInputs.length; i++) {
+    var hours = Object.keys(timeInputs);
+    for (var i = 0; i < hours.length; i++) {
     var todorowEl = $('<div>');
     var labelEl = $('<label>');
     var buttEl = $('<button>');
     var textArea = $('<textarea>');
-    
+    var key = hours[i];
 
+    buttEl.attr('data-index', key);
     container.append(todorowEl);
     todorowEl.append(labelEl);
     todorowEl.append(textArea);
@@ -33,20 +38,20 @@ function renderList() {
     textArea.addClass('col-8');
     buttEl.addClass('col-1');
     
+    textArea.text(timeInputs[key]);
+    labelEl.text(key);
+    buttEl.text('Save');
+
     if(currentHour > timeInputs.miltime){
         textArea.style.backgroundColor = "red"
     }
-
-    labelEl.text(timeInputs[i].time);
-    buttEl.text('Save');
     }
 
-    // buttEl.addEventListener('submit', function(event){
-    //     event.preventDefault();
-    //     var todoSoon = textArea.value
-    //     allToDo = 
-    //     localStorage.setItem("",)
-    // })
+    container.on('click', "button", function(event){
+        timeInputs[$(this).data("index")] = $(this).prev().val();
+        localStorage.setItem("input", JSON.stringify(timeInputs));
+        renderList();
+    })
 }
 
 
