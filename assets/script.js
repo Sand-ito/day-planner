@@ -1,6 +1,7 @@
+var container = $('.container');
 
 $('#currentDay').text("Today is " + moment().format("dddd, MMMM do YYYY"))
-var currentHour = time.format("k")
+var currentHour = moment().format("k")
 
 var timeInputs = [
     { time: 9, input: "" },
@@ -15,6 +16,23 @@ var timeInputs = [
 ]
 
 function renderList() {
-    for (var i = 0; i < timeInputs; i++)
+    for (var i = 0; i < timeInputs.length; i++) {
+    var todorowEl = $('<div>');
+    var labelEl = $('<label>');
+    var buttEl = $('<button>');
+    var textArea = $('<textarea>');
     
+
+    container.append(todorowEl);
+    todorowEl.append(textArea);
+    todorowEl.append(labelEl);
+    todorowEl.append(buttEl);
+
+    todorowEl.addClass('row');
+    labelEl.addClass('col-2 float-left');
+    textArea.addClass('col-8');
+    buttEl.addClass('col-1');
+    }
 }
+
+renderList();
