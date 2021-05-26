@@ -20,38 +20,53 @@ var timeInputs = JSON.parse(localStorage.getItem('input')) || {
 
 function renderList() {
     var hours = Object.keys(timeInputs);
+
     for (var i = 0; i < hours.length; i++) {
-    var todorowEl = $('<div>');
-    var labelEl = $('<label>');
-    var buttEl = $('<button>');
-    var textArea = $('<textarea>');
-    var key = hours[i];
+        var todorowEl = $('<div>');
+        var labelEl = $('<label>');
+        var buttEl = $('<button>');
+        var textArea = $('<textarea>');
+        var key = hours[i];
+        
+        
+        buttEl.attr('data-index', key);
+        textArea.attr('id', 'text-' + key)
+        if(parseInt(currentHour) < parseInt(key)){
+            textArea.addClass('future')
+        } else if (parseInt(currentHour) > parseInt(key)) {
+            textArea.addClass('past')
+        } else {
+            textArea.addClass('present')
+        }
 
-    buttEl.attr('data-index', key);
-    container.append(todorowEl);
-    todorowEl.append(labelEl);
-    todorowEl.append(textArea);
-    todorowEl.append(buttEl);
+        
+        
+        todorowEl.addClass('row');
+        labelEl.addClass('col-1');
+        textArea.addClass('col-8');
+        buttEl.addClass('col-1');
+        
+        textArea.text(timeInputs[key]);
+        if( parseInt(key) > 12 ){
 
-    todorowEl.addClass('row');
-    labelEl.addClass('col-1');
-    textArea.addClass('col-8');
-    buttEl.addClass('col-1');
-    
-    textArea.text(timeInputs[key]);
-    labelEl.text(key);
-    buttEl.text('Save');
-
-    if(currentHour > timeInputs.miltime){
-        textArea.style.backgroundColor = "red"
-    }
+            labelEl.text((key - 12) + "pm");
+        } else if (parseInt(key) === 12 ) {
+            labelEl.text(key +"pm");
+        } else {
+            labelEl.text(key +"am");
+        }
+        buttEl.text('Save');
+        
+        container.append(todorowEl);
+        todorowEl.append(labelEl);
+        todorowEl.append(textArea);
+        todorowEl.append(buttEl);
     }
 
     container.on('click', "button", function(event){
         timeInputs[$(this).data("index")] = $(this).prev().val();
         localStorage.setItem("input", JSON.stringify(timeInputs));
-        renderList();
-    })
+    })   
 }
 
 
